@@ -1,3 +1,4 @@
+### An example using simulation data
 from scAnCluster_preprocess import *
 from scAnCluster_network import *
 
