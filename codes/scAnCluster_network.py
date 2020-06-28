@@ -15,7 +15,7 @@ from sklearn.metrics.cluster import contingency_matrix
 MeanAct = lambda x: tf.clip_by_value(K.exp(x), 1e-5, 1e6)
 DispAct = lambda x: tf.clip_by_value(tf.nn.softplus(x), 1e-4, 1e4)
 
-
+### define cluster accuracy
 def cluster_acc(y_true, y_pred):
     y_true = y_true.astype(np.int64)
     assert y_pred.size == y_true.size
@@ -27,14 +27,14 @@ def cluster_acc(y_true, y_pred):
     ind = linear_assignment(w.max() - w)
     return sum([w[i, j] for i, j in ind]) * 1.0 / y_pred.size
 
-
+### transform label vector to label matrix
 def label2matrix(label):
     unique_label, label = np.unique(label, return_inverse=True)
     one_hot_label = np.zeros((len(label), len(unique_label)))
     one_hot_label[np.arange(len(label)), label] = 1
     return one_hot_label
 
-
+### calculation the annotation results
 def annotation(cellname_train, cellname_test, Y_pred_train, Y_pred_test):
     train_confusion_matrix = contingency_matrix(cellname_train, Y_pred_train)
     annotated_cluster = np.unique(Y_pred_train)[train_confusion_matrix.argmax(axis=1)]
@@ -85,14 +85,14 @@ def _reduce_mean(x):
     x = _nan2zero(x)
     return tf.divide(tf.reduce_sum(x), nelem)
 
-
+### adaptive distance
 def adapative_dist(hidden, clusters, sigma):
     dist1 = K.sum(K.square(K.expand_dims(hidden, axis=1) - clusters), axis=2)
     dist2 = K.sqrt(dist1)
     dist = (1 + sigma) * dist1 / (dist2 + sigma)
     return dist
 
-
+### fuzzy kmeans
 def fuzzy_kmeans(hidden, clusters, sigma, theta, adapative = True):
     if adapative:
         dist = adapative_dist(hidden, clusters, sigma)
@@ -104,7 +104,7 @@ def fuzzy_kmeans(hidden, clusters, sigma, theta, adapative = True):
     fuzzy_dist = q * dist
     return dist, fuzzy_dist
 
-
+### sphere kmeans
 def sphere_kmeans(hidden, clusters, theta):
     dist = 2 * (1 - tf.matmul(hidden, tf.transpose(clusters)))
     q = K.exp(-dist / theta)
@@ -112,7 +112,7 @@ def sphere_kmeans(hidden, clusters, theta):
     fuzzy_dist = q * dist
     return dist, fuzzy_dist
 
-
+### negative binomial likelihood
 def NB(theta, y_true, y_pred, mask = False, debug = False, mean = False):
     eps = 1e-10
     scale_factor = 1.0
@@ -140,7 +140,7 @@ def NB(theta, y_true, y_pred, mask = False, debug = False, mean = False):
             final = tf.reduce_mean(final)
     return final
 
-
+### zero-inflated negative binomial likelihood
 def ZINB(pi, theta, y_true, y_pred, ridge_lambda, mean = True, mask = False, debug = False):
     eps = 1e-10
     scale_factor = 1.0
@@ -163,7 +163,7 @@ def ZINB(pi, theta, y_true, y_pred, ridge_lambda, mean = True, mask = False, deb
     result = _nan2inf(result)
     return result
 
-
+### define scAnCluster network
 class scAnCluster(object):
     def __init__(self, dataname, dims, batch_num, classes, cluster_num, alpha, gamma, theta, learning_rate, sigma = 0., noise_sd = 1.5,
                  init = "glorot_uniform", act = "relu", distance = "sphere", distrib = "ZINB", supervised = True, selfsupervised = True, unsupervised = True):
@@ -280,7 +280,7 @@ class scAnCluster(object):
         if self.unsupervised:
             self.train_op = self.optimizer.minimize(self.total_loss)
 
-
+### pretrain and funetrain
     def train(self, X, count_X, cellname, batch_label, size_factor, pretrain_epochs, random_seed, gpu_option):
         t1 = time.time()
         np.random.seed(random_seed)
