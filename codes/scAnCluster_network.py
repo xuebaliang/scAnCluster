@@ -460,8 +460,8 @@ class scAnCluster(object):
         target_accuracy = np.around(cluster_acc(Y_target, Y_pred_target), 4)
         target_ARI = np.around(adjusted_rand_score(Y_target, Y_pred_target), 4)
 
-        pred_cluster_num = len(np.unique(np.array(Y_pred_target)))
-        print("The prediction cluster number on target data is {}".format(pred_cluster_num))
+        #pred_cluster_num = len(np.unique(np.array(Y_pred_target)))
+        #print("The prediction cluster number on target data is {}".format(pred_cluster_num))
         annotated_source_accuracy, annotated_target_accuracy, target_annotation_label = annotation(cellname_source, cellname_target,
                                                                                                    Y_pred_source, Y_pred_target)
 
