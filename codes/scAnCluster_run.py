@@ -11,7 +11,7 @@ if __name__ == "__main__":
     cellname = np.array(["group" + str(i) for i in Y])
     dims = [1000, 256, 64, 32]
     highly_genes = 1000
-    pretrain_epochs = 500
+    pretrain_epochs = 300
     batch_num = len(np.unique(batch_label))
     count_X = X
     if X.shape[1] == highly_genes:
