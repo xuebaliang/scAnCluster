@@ -231,8 +231,11 @@ class scAnCluster(object):
 
         if self.unsupervised:
             if self.distance == "sphere":
-                #self.normalize_clusters = tf.nn.l2_normalize(self.clusters, axis=1)
+                ### choice 1
+                self.normalize_clusters = tf.nn.l2_normalize(self.clusters, axis=1)
                 self.latent_dist1, self.latent_dist2 = sphere_kmeans(self.normalize_latent, self.normalize_clusters, self.theta)
+                ### choice 2
+                # self.latent_dist1, self.latent_dist2 = sphere_kmeans(self.normalize_latent, self.clusters, self.theta)
             elif self.distance == "fuzzy":
                 self.latent_dist1, self.latent_dist2 = fuzzy_kmeans(self.latent, self.clusters, self.sigma, self.theta, adapative=True)
 
@@ -403,10 +406,12 @@ class scAnCluster(object):
         last_pred_target = np.copy(Y_pred_target)
 
         if self.unsupervised:
-            from sklearn import preprocessing
-            init_cluster_centers = preprocessing.normalize(kmeans.cluster_centers_, axis=1, norm="l2")
-            sess.run(tf.assign(self.clusters, init_cluster_centers))
-            #sess.run(tf.assign(self.clusters, kmeans.cluster_centers_))
+            ### choice 1
+            sess.run(tf.assign(self.clusters, kmeans.cluster_centers_))
+            ### choice 2
+            #from sklearn import preprocessing
+            #init_cluster_centers = preprocessing.normalize(kmeans.cluster_centers_, axis=1, norm="l2")
+            #sess.run(tf.assign(self.clusters, init_cluster_centers))
             print("end the pretraining")
             print("begin the cluster funetraining")
             for i in range(funetrain_epochs):
