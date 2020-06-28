@@ -48,7 +48,7 @@ def read_data(filename, sparsify=False, skip_exprs=False):
             mat = sp.sparse.csr_matrix((obs.shape[0], var.shape[0]))
     return mat, obs, var, uns
 
-
+### read real data
 def read_real(filename, batch = True):
     data_path = "./realdata/" + filename + "/data.h5"
     mat, obs, var, uns = read_data(data_path, sparsify=False, skip_exprs=False)
@@ -65,7 +65,7 @@ def read_real(filename, batch = True):
     else:
         return X, cell_name
 
-
+### read simulation data
 def read_simu(dataname):
     data_path = "./data/simulation/" + dataname
     data_mat = h5py.File(data_path)
@@ -74,7 +74,7 @@ def read_simu(dataname):
     batch = np.array(data_mat["B"])
     return x, y, batch
 
-
+### using scanpy for data preprocessing
 def normalize(adata, highly_genes = None, size_factors=True, normalize_input=True, logtrans_input=True):
     sc.pp.filter_genes(adata, min_counts=10)
     sc.pp.filter_cells(adata, min_counts=1)
