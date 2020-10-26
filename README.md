@@ -27,6 +27,10 @@ python scAnCluster_run.py
 
 When you take the complete mixed data as input, you can get that the annotation accuracy and clustering ARI on the target data is 0.9889 and 0.9736, respectively. Besides, the target prediction information is in the "target_prediction_matrix" variable. It is a data frame, include four columns, they are true label, true cell type, cluster label, annotation cell type. You can save it in .csv file. When you remove the group 0 from the reference data, you can get that the annotation accuracy and clustering ARI on the target data is 0.9619 and 0.9115, respectively. Similarly, when remove the group 0 from the target data, you can get that the annotation accuracy and clustering ARI on the target data is 0.9784 and 0.9511, respectively. We would continue to improve our tool to help our users as much as possible in the future.
 
+Reference
+-----
+Our paper is published in Genes. The details can be seen in <a href="https://www.mdpi.com/2073-4425/11/7/792/htm">article</a>. Please consider citing it.
+
 Contributing
 -----
 Author email: clandzyy@pku.edu.cn
